@@ -1,4 +1,4 @@
-module github.com/nchillal/run_command_on_ec2
+module github.com/nchillal/run_cmd_on_ec2
 
 go 1.20
 
