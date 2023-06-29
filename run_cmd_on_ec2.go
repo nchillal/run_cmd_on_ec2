@@ -1,4 +1,4 @@
-package run_command_on_ec2
+package run_cmd_on_ec2
 
 import (
 	"context"
