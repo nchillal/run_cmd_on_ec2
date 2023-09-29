@@ -10,9 +10,13 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 )
 
-func RunCommand(instance_id string, cmd string) (string, error) {
+func RunCommand(awsProfile string, awsRegion string, instance_id string, cmd string) (string, error) {
 	// Load AWS configuration from default environment variables, shared config, or AWS profile
-	cfg, err := config.LoadDefaultConfig(context.TODO())
+	cfg, err := config.LoadDefaultConfig(
+		context.TODO(),
+		config.WithSharedConfigProfile(awsProfile),
+		config.WithRegion(awsRegion),
+	)
 	if err != nil {
 		fmt.Println("Failed to load AWS configuration:", err)
 	}
