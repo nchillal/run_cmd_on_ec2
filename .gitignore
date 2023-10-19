@@ -19,3 +19,10 @@
 
 # Go workspace file
 go.work
+
+# MacOS
+.DS_Store
+/.idea/.gitignore
+/.idea/modules.xml
+/.idea/run_cmd_on_ec2.iml
+/.idea/vcs.xml

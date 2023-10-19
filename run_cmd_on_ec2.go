@@ -10,7 +10,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 )
 
-func RunCommand(awsProfile string, awsRegion string, instance_id string, cmd string) (string, error) {
+// RunCommand runs command given on AWS EC2
+func RunCommand(awsProfile string, awsRegion string, instanceId string, cmd string) (string, error) {
 	// Load AWS configuration from default environment variables, shared config, or AWS profile
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
@@ -18,14 +19,14 @@ func RunCommand(awsProfile string, awsRegion string, instance_id string, cmd str
 		config.WithRegion(awsRegion),
 	)
 	if err != nil {
-		fmt.Println("Failed to load AWS configuration:", err)
+		fmt.Println("Failed to load AWS configuration: ", err)
 	}
 
 	// Create an SSM client
-	ssm_client := ssm.NewFromConfig(cfg)
+	ssmClient := ssm.NewFromConfig(cfg)
 
 	// Specify the EC2 instance ID where you want to run the command
-	instanceID := instance_id
+	instanceID := instanceId
 
 	// Specify the command you want to run on the EC2 instance
 	command := cmd
@@ -40,7 +41,7 @@ func RunCommand(awsProfile string, awsRegion string, instance_id string, cmd str
 	}
 
 	// Execute the RunCommand API
-	resp, err := ssm_client.SendCommand(context.TODO(), input)
+	resp, err := ssmClient.SendCommand(context.TODO(), input)
 	if err != nil {
 		fmt.Println("Failed to execute RunCommand:", err)
 	}
@@ -48,7 +49,7 @@ func RunCommand(awsProfile string, awsRegion string, instance_id string, cmd str
 	// Get the command execution details
 	executionID := resp.Command.CommandId
 
-	commandOutput, err := ssm.NewCommandExecutedWaiter(ssm_client).WaitForOutput(context.TODO(), &ssm.GetCommandInvocationInput{
+	commandOutput, err := ssm.NewCommandExecutedWaiter(ssmClient).WaitForOutput(context.TODO(), &ssm.GetCommandInvocationInput{
 		CommandId:  executionID,
 		InstanceId: &instanceID,
 	}, 2*time.Minute)
